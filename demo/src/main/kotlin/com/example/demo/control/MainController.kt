@@ -31,6 +31,11 @@ class MainController{
         return testService.getAllMembers()
     }
 
+    @GetMapping("/test2")
+    fun getAllMembers2() : List<Member> {
+        return testService.getAllMembers()
+    }
+
     @RequestMapping("helloWorld1")
     fun helloWorld1() : ModelAndView {
         return ModelAndView("helloWorld")

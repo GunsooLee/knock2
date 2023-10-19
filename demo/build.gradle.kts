@@ -32,12 +32,12 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.apache.poi", "poi", "3.9")
-	compileOnly("org.projectlombok:lombok")
+	//compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-	annotationProcessor("org.projectlombok:lombok")
+	//annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.kotest:kotest-runner-junit5:$version") // kotlin junit 처럼 쓸 수 있는 Spec 들이 정의 됨
 	testImplementation("io.kotest:kotest-assertions-core:$version") // shouldBe... etc 와같이 Assertions 의 기능을 제공

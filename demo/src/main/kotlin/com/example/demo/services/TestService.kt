@@ -14,4 +14,8 @@ class TestService {
     fun getAllMembers(): List<Member> {
         return memberRepository.findAll();
     }
+
+    fun save(m : Member){
+        memberRepository.save(m)
+    }
 }

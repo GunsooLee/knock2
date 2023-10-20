@@ -1,6 +1,8 @@
 package com.example.demo.services;
 
 
+import com.example.demo.domain.Article
+import com.example.demo.dto.AddArticleRequest
 import com.example.demo.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,4 +13,5 @@ class BlogService {
     lateinit var blogRepository: BlogRepository
 
     //fun save
+    fun save(request: AddArticleRequest) = blogRepository.save(request.toEntity())
 }

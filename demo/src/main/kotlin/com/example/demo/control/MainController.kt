@@ -21,11 +21,12 @@ class MainController{
     /*
     Autowired 와 lateinit 는 짝궁
     늦은 초기화?
-    lateinit:
+    lateinit를 적어주지 않으면 에러가 난다 -> 왜?
      */
 
     @Autowired
     lateinit var bookingService: BookingService
+
 
     @Autowired
     lateinit var testService: TestService

@@ -14,4 +14,6 @@ class BlogService {
 
     //fun save
     fun save(request: AddArticleRequest) = blogRepository.save(request.toEntity())
+
+    fun findAll() = blogRepository.findAll()
 }

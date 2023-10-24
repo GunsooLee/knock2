@@ -44,6 +44,8 @@ dependencies {
 	//testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3") // spring boot test 를 위해서 추가
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+	testRuntimeOnly("org.junit.platform:junit-platform-engine:1.10.0")
+	testRuntimeOnly("org.junit.platform:junit-platform-commons:1.10.0")
 }
 
 tasks.withType<KotlinCompile> {

@@ -17,4 +17,9 @@ class Article (
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키를 자동으로 1씩 증가
     @Column(name = "id", updatable = false)
     var id: Long = 0
+
+    fun update(title: String, content: String) {
+        this.title = title
+        this.content = content
+    }
 }

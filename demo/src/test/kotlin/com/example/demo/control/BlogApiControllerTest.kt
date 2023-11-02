@@ -10,6 +10,7 @@ package com.example.demo.control
 import com.example.demo.DemoApplication
 import com.example.demo.domain.Article
 import com.example.demo.dto.AddArticleRequest
+import com.example.demo.dto.UpdateArticleRequest
 import com.example.demo.repository.BlogRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -22,14 +23,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 
+// intellij 에서 jUnit 테스트 리포트 한글 깨질 때
+// shift 두 번 > edit vm 검색(사용자 지졍 vm 옵션?) >   -Dfile.encoding=UTF-8 추가
 
 @SpringBootTest(classes = [DemoApplication::class]) // 테스트용 애플리케이션 컨텍스트
 @AutoConfigureMockMvc // MockMvc 생성 및 자동 구성
@@ -105,10 +107,9 @@ class BlogApiControllerTest {
 
         // ---given--- (테스트 준비)
         val url = "/api/articles"
-        val title = "title"
-        val content = "content"
+        val title = "title123"
+        val content = "content456"
 
-        println("111111111")
         blogRepository.save(Article(title,content))
         blogRepository.save(Article(title,content))
         blogRepository.save(Article(title,content))
@@ -116,26 +117,74 @@ class BlogApiControllerTest {
         // ---when--- (테스트를 실제로 진행)
         // 설정한 내용을 바탕으로 요청 전송
         // MockMvc를 활용해 Controller에 대한 슬라이스 테스트를 작성
-        //val resultActions = mockMvc.perform(get(url)).andDo(MockMvcResultHandlers.print())
-        println("2222222222")
         val resultActions = mockMvc.perform(
             get(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding("utf-8")
-
+                .contentType(MediaType.APPLICATION_JSON)
         )
 
-        println("33333333333")
-        // ---then--- (테스트 결과 검증)
+        println(resultActions
+            .andReturn().response.contentAsString
+        )
 
         resultActions
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].content").value(content))
-            .andExpect(jsonPath("$[0].title").value(title))
-
+            .andExpect(jsonPath("$[0].article.content").value(content))
+            .andExpect(jsonPath("$[0].article.title").value(title))
     }
 
+    @DisplayName("deleteArticle: 블로그 글 삭제에 성공한다.")
+    @Test
+    fun deleteArticle(){
+        // given
+        val url = "/api/articles/{id}"
+        val title = "title"
+        val content = "content"
+
+        val savedArticle = blogRepository.save(Article(title,content))
+
+        // when
+        mockMvc.perform(
+            delete(url, savedArticle.id)
+        ).andExpect(status().isOk())
+
+
+        // then
+        val articles = blogRepository.findAll()
+
+        assertThat(articles).isEmpty()
+    }
+
+    @DisplayName("updateArticle: 블로그 글 수정에 성공한다.")
+    @Test
+    fun updateArticle(){
+        // given
+        val url = "/api/articles/{id}"
+        val title = "title"
+        val content = "content"
+
+        val savedArticle = blogRepository.save(Article(title, content))
+
+        val newTitle = "new title"
+        val newContent = "new content"
+
+        val request = UpdateArticleRequest(newTitle, newContent)
+
+        //when
+        val result = mockMvc.perform(
+            put(url, savedArticle.id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)) // update(put) 전달 값
+        )
+
+        //then
+        result.andExpect(status().isOk)
+
+        val article = blogRepository.findById(savedArticle.id).get()
+
+        assertThat(article.title).isEqualTo(newTitle)
+        assertThat(article.content).isEqualTo(newContent)
+    }
 }
     /*
     Execution failed for task ':test'.
